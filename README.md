@@ -1,6 +1,6 @@
 ## Dependencies
 
-- [just](https://github.com/casey/just) for command running.
+- [just](https://github.com/casey/just) for command running `cargo install just`.
 - [zombienet](https://github.com/paritytech/zombienet/releases/) binary in your path.
 - `polkadot` and `polkadot-parachain` binaries in your path. See setup below.
 
