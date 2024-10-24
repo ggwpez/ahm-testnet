@@ -13,7 +13,7 @@ setup:
 
   if [ ! -d "runtimes" ]; then
     echo "Cloning Polkadot Runtimes..."
-    git clone https://github.com/polkadot-fellows/runtimes -q --depth 1 --branch v1.3.3 runtimes
+    git clone https://github.com/polkadot-fellows/runtimes -q --depth 1 --branch oty-ahm-controller
 
     cd runtimes
     cargo update -p time
@@ -31,7 +31,7 @@ build:
 
   echo "Compiling the SDK ..."
   cd polkadot-sdk
-  cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain
+  #cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain
   cd -
 
   echo "Compiling the Runtimes ..."
@@ -40,7 +40,7 @@ build:
   cd -
 
 spawn:
-  PATH="$PATH:polkadot-sdk/target/release" zombienet spawn simple.toml --provider native
+  PATH="$PATH:polkadot-sdk/target/release" ./zombienet-linux-x64 spawn simple.toml --provider native
 
 clean:
   rm -rf polkadot-sdk polkadot-sdk-1.14 runtimes
