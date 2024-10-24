@@ -11,20 +11,13 @@ setup:
     cargo install --git https://github.com/paritytech/psvm psvm
   fi
 
-  if [ ! -d "polkadot-sdk-1.14" ]; then
-    echo "Cloning Polkadot SDK v1.14..."
-    git clone https://github.com/paritytech/polkadot-sdk -q --depth 1 --branch release-crates-io-v1.14.0 polkadot-sdk-1.14
-  fi
-
   if [ ! -d "runtimes" ]; then
     echo "Cloning Polkadot Runtimes..."
     git clone https://github.com/polkadot-fellows/runtimes -q --depth 1 --branch v1.3.3 runtimes
 
     cd runtimes
     cargo update -p time
-    psvm -v 1.14.0
     cd -
-    python3 patch-crates.py polkadot-sdk-1.14 runtimes    
   fi
   
   if [ ! -d "polkadot-sdk" ]; then

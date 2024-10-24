@@ -3,7 +3,8 @@
 # Usage
 #  python3 patch-crates.py <path-to-sdk> <path-to-runtimes>
 
-import tomllib
+import toml
+from cargo_workspace import Workspace
 import sys
 import os
 
@@ -22,30 +23,31 @@ def main():
 		print(f"Error: {runtimes_path} does not exist")
 		sys.exit(1)
 	
-	# Recursively loop through all Cargo.toml files and record their name and path
+	# Recursively loop through all Cargo.toml files and record their name and path but skip the target dir
 	sdk_crates = {}
 	for root, dirs, files in os.walk(sdk_path):
+		if "target" in dirs:
+			continue
 		for file in files:
 			if file == "Cargo.toml":
 				path = os.path.join(root, file)
-				with open(path, "rb") as f:
-					parsed = tomllib.load(f)
-					if 'package' in parsed:
-						# Cut off the file name
-						path = os.path.dirname(path)
-						sdk_crates[parsed['package']['name']] = os.path.relpath(path, runtimes_path)
+				parsed = toml.load(path)
+
+				if 'package' in parsed:
+					# Cut off the file name
+					path = os.path.dirname(path)
+					sdk_crates[parsed['package']['name']] = os.path.relpath(path, runtimes_path)
 	
 	print(f"Found {len(sdk_crates)} crates in the SDK")
 	# Go through all workspace.dependencies of the runtimes Cargo.toml and add a patch entry to the end
 	patches = []
 
-	with open(os.path.join(runtimes_path, "Cargo.toml"), "rb") as f:
-		runtimes = tomllib.load(f)
-		for name in runtimes['workspace']['dependencies']:
-			dep = runtimes['workspace']['dependencies'][name]
-			
-			if name in sdk_crates:
-				patches.append(f"{name} = {{ path = \"{sdk_crates[name]}\" }}")
+	runtimes = toml.load(os.path.join(runtimes_path, "Cargo.toml"))
+	for name in runtimes['workspace']['dependencies']:
+		dep = runtimes['workspace']['dependencies'][name]
+		
+		if name in sdk_crates:
+			patches.append(f"{name} = {{ path = \"{sdk_crates[name]}\" }}")
 	
 	# Append the patches to the Cargo.toml
 	with open(os.path.join(runtimes_path, "Cargo.toml"), "a") as f:
