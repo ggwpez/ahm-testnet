@@ -40,7 +40,7 @@ build:
   cd -
 
 spawn:
-  PATH="$PATH:polkadot-sdk/target/release" ./zombienet-linux-x64 spawn simple.toml --provider native
+  PATH="$PATH:polkadot-sdk/target/release" zombienet spawn simple.toml --provider native
 
 clean:
   rm -rf polkadot-sdk polkadot-sdk-1.14 runtimes
