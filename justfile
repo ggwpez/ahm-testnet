@@ -31,7 +31,7 @@ build:
 
   echo "Compiling the SDK ..."
   cd polkadot-sdk
-  #cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain
+  cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain
   cd -
 
   echo "Compiling the Runtimes ..."
