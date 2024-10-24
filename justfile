@@ -1,30 +1,53 @@
 set dotenv-load
 
-default: spawn
+default: setup build spawn
 
-spawn:
-  PATH="$PATH:$POLKADOT:$POLKADOT_PARACHAIN" zombienet spawn simple.toml --provider native
+setup:
+  #!/usr/bin/env bash
+  set -e
 
-setup SDK RUNTIMES:
-  #!/usr/bin/env sh
-  if [ -f ".env" ]; then
-    echo "Error: .env file already exists. Please remove or rename it first."
-    exit 1
+  # Check if psvm exists
+  if ! command -v psvm 2>&1 >/dev/null; then
+    cargo install --git https://github.com/paritytech/psvm psvm
   fi
 
-  echo "SDK={{SDK}}" >> .env
-  echo "POLKADOT={{SDK}}/target/release/polkadot" >> .env
-  echo "POLKADOT_PARACHAIN={{SDK}}/target/release/polkadot-parachain" >> .env
-  echo "RUNTIMES={{RUNTIMES}}" >> .env
+  if [ ! -d "polkadot-sdk-1.14" ]; then
+    echo "Cloning Polkadot SDK v1.14..."
+    git clone https://github.com/paritytech/polkadot-sdk -q --depth 1 --branch release-crates-io-v1.14.0 polkadot-sdk-1.14
+  fi
+
+  if [ ! -d "runtimes" ]; then
+    echo "Cloning Polkadot Runtimes..."
+    git clone https://github.com/polkadot-fellows/runtimes -q --depth 1 --branch v1.3.3 runtimes
+
+    cd runtimes
+    cargo update -p time
+    psvm -v 1.14.0
+    cd -
+    python3 patch-crates.py polkadot-sdk-1.14 runtimes    
+  fi
+  
+  if [ ! -d "polkadot-sdk" ]; then
+    echo "Cloning Polkadot SDK..."
+    git clone https://github.com/paritytech/polkadot-sdk -q --depth 1 --branch master
+  fi
 
 build:
   #!/usr/bin/env sh
-  cd $RUNTIMES
+  set -e
+
+  echo "Compiling the SDK ..."
+  cd polkadot-sdk
+  cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain
+  cd -
+
+  echo "Compiling the Runtimes ..."
+  cd runtimes
   cargo b -r --features=fast-runtime --bin chain-spec-generator
-  #cargo b -r --features=fast-runtime -p polkadot-runtime -p asset-hub-polkadot-runtime
+  cd -
 
-  #cd $SDK
-  #cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain
+spawn:
+  PATH="$PATH:polkadot-sdk/target/release" zombienet spawn simple.toml --provider native
 
-  $POLKADOT --version
-  $POLKADOT_PARACHAIN --version
+clean:
+  rm -rf polkadot-sdk polkadot-sdk-1.14 runtimes
