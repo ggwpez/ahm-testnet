@@ -21,10 +21,10 @@ build:
   #!/usr/bin/env sh
   cd $RUNTIMES
   cargo b -r --features=fast-runtime --bin chain-spec-generator
-  cargo b -r --features=fast-runtime -p polkadot-runtime -p asset-hub-polkadot-runtime
+  #cargo b -r --features=fast-runtime -p polkadot-runtime -p asset-hub-polkadot-runtime
 
-  cd $SDK
-  cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain
+  #cd $SDK
+  #cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain
 
   $POLKADOT --version
   $POLKADOT_PARACHAIN --version
