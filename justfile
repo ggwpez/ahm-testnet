@@ -1,13 +1,6 @@
 set dotenv-load
 
-default: chainspec spawn
-
-chainspec:
-  $RUNTIMES/target/release/chain-spec-generator polkadot-local > relaychain-spec.json
-  python3 patch-chainspec.py relaychain-spec.json $RUNTIMES/target/release/wbuild/polkadot-runtime/polkadot_runtime.compact.compressed.wasm
-
-  $RUNTIMES/target/release/chain-spec-generator asset-hub-polkadot-local > assethub-spec.json
-  python3 patch-chainspec.py assethub-spec.json $RUNTIMES/target/release/wbuild/asset-hub-polkadot-runtime/asset_hub_polkadot_runtime.compact.compressed.wasm
+default: spawn
 
 spawn:
   PATH="$PATH:$POLKADOT:$POLKADOT_PARACHAIN" zombienet spawn simple.toml --provider native

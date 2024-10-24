@@ -1,7 +1,8 @@
 [relaychain]
 default_command = "../polkadot-sdk/target/release/polkadot"
 default_args = [ "-lparachain=debug" ]
-chain_spec_path = "relaychain-spec.json"
+chain = "polkadot-local"
+chain_spec_command = "{{RUNTIMES}}/target/release/chain-spec-generator {% raw %} {{chainName}} {% endraw %}"
 
   [[relaychain.nodes]]
   name = "Relay1"
@@ -13,9 +14,10 @@ chain_spec_path = "relaychain-spec.json"
 
 [[parachains]]
 id = 1000
-chain_spec_path = "assethub-spec.json"
 add_to_genesis = true
 cumulus_based = true
+chain = "asset-hub-polkadot-local"
+chain_spec_command = "{{RUNTIMES}}/target/release/chain-spec-generator {% raw %} {{chainName}} {% endraw %}"
 
   [[parachains.collators]]
   name = "AssetHub"
