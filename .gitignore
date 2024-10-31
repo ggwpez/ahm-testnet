@@ -2,3 +2,6 @@
 .env
 runtimes
 polkadot-sdk*
+my-zombienet/
+tmp/
+vendor/
