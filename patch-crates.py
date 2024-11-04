@@ -10,7 +10,7 @@ import os
 
 def main():
 	if len(sys.argv) != 3:
-		print("Usage: python runtime-chainspec.py <path-to-sdk> <path-to-runtimes>")
+		print("Usage: python runtime-chainspec.py <vendor> <runtimes>")
 		sys.exit(1)
 	
 	sdk_path = sys.argv[1]
