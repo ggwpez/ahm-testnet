@@ -46,8 +46,6 @@ setup:
     cargo vendor ../vendor -q
     cd ../vendor
 
-    python3 vendor-version.py "pallet-balances:sp-io@37.0.0"
-
     git init -b master .
     git add .
     git commit -m "Init" --author "ahm <test@test.com>" --no-verify --no-gpg-sign --no-signoff || true
@@ -87,6 +85,7 @@ build:
   cd vendor
   # Only checkout rust files, since we manually change the toml files
   git checkout -- "*/**/*.rs"
+  git apply ../vendor-dep.patch
   cd ..
   tmp/venv/bin/python3 vendor.py --repo-root polkadot-sdk-1.14 --vendor-dir vendor
 
