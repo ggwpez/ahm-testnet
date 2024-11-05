@@ -65,6 +65,11 @@ And in graphical form:
 
 ## Account Migration
 
+### With Sufficients
+
+This strategy uses sufficient refs to ensure that no account will be dusted on either side and both exist during the time of operation.  
+We need to be careful to not mess up references that other pallet have placed, but the only pallet using this kind is the `assets` pallet, which can easily be reviewed for conflicts.
+
 Accounts will be migrated in the following way:
 1. A pallet wants to migrate a specific freeze, lock, reserve or hold. Otherwise nothing happens for that account (as of yet).
 2. The Relay places a *sufficient* reference on the account.
@@ -74,3 +79,11 @@ Accounts will be migrated in the following way:
 6. The AH puts the information that a sufficient was placed into storage.
 7. The AH locks/reserves/freezes/holds the balance that was teleported.
 8. At the end of the migration, both Relay and AH cleanup the sufficient refs.
+
+### Just ED
+
+Another way would be to force-teleport the ED of 0.01 DOT to AH for all affected accounts.
+
+Originally I thought this to be a good idea, but some reasons not todo it:
+- Has to sometimes mint the ED, in case that accounts have between 1 and 1.01 DOT balance without a reserve or lock.
+- Would affect system accounts and possibly violate some of their invariants.
