@@ -54,9 +54,23 @@ Hopefully this graph helps to understand the relation:
 
 ## Strategy
 
-The overall migration is coordinated by the `ahm-controller` pallet that is deployed on Relay and AH.
+The overall migration is coordinated by the `ahm-controller` pallet that is deployed on both Relay and AH. The controller pallet calls into each pallet one-by-one and ensures that they finish their migration.
 
-It looks like this in a linearized fashion:
-`Relay on_init` -> `ahm-controller::relay_init` -> `pallet-balances::migrate_out` -> `send_xcm` -> `Ah on_init` -> `message_queue::process` -> `pallet-balances::migrate_in `.
+The linear data-flow looks like this:
+`Relay on_init` -> `ahm-controller::relay_init` -> `pallet-balances::migrate_out` -> `XMCP` -> `Ah on_init` -> `message_queue::process` -> `pallet-balances::migrate_in `.
+
+And in graphical form:
 
 ![data-flow](.assets/data-flow.png)
+
+## Account Migration
+
+Accounts will be migrated in the following way:
+1. A pallet wants to migrate a specific freeze, lock, reserve or hold. Otherwise nothing happens for that account (as of yet).
+2. The Relay places a *sufficient* reference on the account.
+3. The Relay puts the information that a sufficient was placed into storage.
+4. The Relay unlocks/unreserves the balance and teleports it over.
+5. The AH palaces a *sufficient* reference on the account.
+6. The AH puts the information that a sufficient was placed into storage.
+7. The AH locks/reserves/freezes/holds the balance that was teleported.
+8. At the end of the migration, both Relay and AH cleanup the sufficient refs.
