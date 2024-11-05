@@ -22,8 +22,8 @@ setup:
     echo "Setting up Python venv..."
     cd tmp
     python3 -m venv venv
-    tmp/venv/bin/python3 -m pip install toml cargo_workspace
     cd ..
+    tmp/venv/bin/python3 -m pip install toml cargo_workspace    
   fi
 
   if [ ! -d "polkadot-sdk-1.14" ]; then
@@ -46,6 +46,8 @@ setup:
     cargo vendor ../vendor -q
     cd ../vendor
 
+    python3 vendor-version.py "pallet-balances:sp-io@37.0.0"
+
     git init -b master .
     git add .
     git commit -m "Init" --author "ahm <test@test.com>" --no-verify --no-gpg-sign --no-signoff || true
@@ -60,10 +62,12 @@ setup:
   fi
 
   # Install a local version of try-runtime-cli in case that the system-wide one is the wrong version or does not exist.
-  if [ ! -d "tmp/try-runtime-cli" ]; then
+  if [ ! -d "tmp/try-runtime-cli/target/release/try-runtime" ]; then
     echo "Installing try-runtime CLI locally..."
     cd tmp
-    git clone https://github.com/paritytech/try-runtime-cli --depth 1 -q
+    if [ ! -d "try-runtime-cli" ]; then
+      git clone https://github.com/paritytech/try-runtime-cli --depth 1 -q
+    fi
     cd try-runtime-cli
     cargo build -r -q
   fi
@@ -88,7 +92,7 @@ build:
 
   echo "Compiling the SDK ..."
   cd polkadot-sdk
-  #cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain -q
+  cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain -q
   cd -
 
   echo "Compiling the Runtimes ..."
