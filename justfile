@@ -84,14 +84,14 @@ build:
 
   cd vendor
   # Only checkout rust files, since we manually change the toml files
-  git checkout -- "*/**/*.rs"
+  git checkout -- .
   git apply ../vendor-dep.patch
   cd ..
   tmp/venv/bin/python3 vendor.py --repo-root polkadot-sdk-1.14 --vendor-dir vendor
 
   echo "Compiling the SDK ..."
   cd polkadot-sdk
-  cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain -q
+  #cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain -q
   cd -
 
   echo "Compiling the Runtimes ..."

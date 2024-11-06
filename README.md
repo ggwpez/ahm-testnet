@@ -11,10 +11,8 @@ Setup, build and start the testnet with:
 just
 ```
 
-You should see this, wich clickable links for each network:
+You should see this with clickable links to PJS:
 ![img](./.assets/spawned.png)
-
-It should also emit a lot of events for processed and enqueued messages.
 
 ## Findings
 
@@ -65,7 +63,9 @@ And in graphical form:
 
 ## Account Migration
 
-### With Sufficients
+Here are some different ways to approach the migration of accounts.
+
+### A) With Sufficients 🙂
 
 This strategy uses sufficient refs to ensure that no account will be dusted on either side and both exist during the time of operation.  
 We need to be careful to not mess up references that other pallet have placed, but the only pallet using this kind is the `assets` pallet, which can easily be reviewed for conflicts.
@@ -80,7 +80,7 @@ Accounts will be migrated in the following way:
 7. The AH locks/reserves/freezes/holds the balance that was teleported.
 8. At the end of the migration, both Relay and AH cleanup the sufficient refs.
 
-### Just ED
+### B) Just ED 🙃
 
 Another way would be to force-teleport the ED of 0.01 DOT to AH for all affected accounts.
 

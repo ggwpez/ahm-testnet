@@ -1,7 +1,7 @@
 *.json
 .env
 runtimes
-polkadot-sdk*
+polkadot-sdk/
 my-zombienet/
 tmp/
 vendor/

@@ -23,7 +23,12 @@ class RustVendorPatcher:
             capture_output=True,
             text=True
         )
-        return [Path(f) for f in result.stdout.splitlines() if f.strip()]
+
+        paths = []
+        for f in result.stdout.splitlines():
+            if not f.strip().endswith(".toml"):
+                paths.append(Path(f))
+        return paths
     
     def modified_by_crate(self) -> Dict[str, List[Path]]:
         """Get modified files grouped by crate."""
