@@ -10,3 +10,15 @@ index eb44b3af..bbfbda55 100644
 +[dependencies.sp-io]
 +version = '37.0.0'
 +default-features = false
+diff --git a/pallet-indices/Cargo.toml b/pallet-indices/Cargo.toml
+index ed482f98..07011b75 100644
+--- a/pallet-indices/Cargo.toml
++++ b/pallet-indices/Cargo.toml
+@@ -196,3 +196,7 @@ priority = 2
+ [lints.rust.suspicious_double_ref_op]
+ level = "allow"
+ priority = 2
++
++[dependencies.log]
++version = "0.4.21"
++default-features = false

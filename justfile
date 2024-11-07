@@ -78,7 +78,7 @@ snapshot:
     tmp/try-runtime-cli/target/release/try-runtime create-snapshot --uri wss://try-runtime.polkadot.io:443 tmp/polkadot.snap
   fi
 
-build:
+patch:
   #!/usr/bin/env sh
   set -e
 
@@ -88,6 +88,10 @@ build:
   git apply ../vendor-dep.patch
   cd ..
   tmp/venv/bin/python3 vendor.py --repo-root polkadot-sdk-1.14 --vendor-dir vendor
+
+build: patch
+  #!/usr/bin/env sh
+  set -e
 
   echo "Compiling the SDK ..."
   cd polkadot-sdk

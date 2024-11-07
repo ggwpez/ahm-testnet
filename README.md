@@ -61,6 +61,22 @@ And in graphical form:
 
 ![data-flow](.assets/data-flow.png)
 
+## General Pallet Migrations
+
+Pallets can generally be migrated in two patterns. Both patters are demonstrated for a single pallet.
+
+### Pallet-wise
+
+The pallet itself is changed to include a new config item, possibly a `AhReserveMigrator`, a new call `migrate_in_*` and a public function `migrate_out_` that can be called by the AHM controller pallet. It is demonstrated in `pallet-indices`.
+
+This approach makes sense when the pallet itself is complex, or the migration needs to call different internal functions of the pallet. Generally, this approach is more messy, as it mandates changes to the pallet.  
+The only issue with this approach is, that it modifies different crates. When multiple people will work on the AHM, then it could become messy and chaotic to manage.
+
+### Module-wise
+
+In this case, no change to the migrated pallet itself is done. Instead, a new module is added to the AHM controller pallet, which corresponds to the pallet name and handles its migration.  
+This works well when the pallet is simple (aka. has a low number of storage invariants) and the migration will not need to call too many internal functions of the pallet.
+
 ## Account Migration
 
 Here are some different ways to approach the migration of accounts.
