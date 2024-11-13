@@ -95,7 +95,7 @@ build: patch
 
   echo "Compiling the SDK ..."
   cd polkadot-sdk
-  #cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain -q
+  cargo b -r --bin polkadot --bin polkadot-execute-worker --bin polkadot-prepare-worker --bin polkadot-parachain -q
   cd -
 
   echo "Compiling the Runtimes ..."

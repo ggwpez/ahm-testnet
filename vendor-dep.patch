@@ -1,14 +1,18 @@
 diff --git a/pallet-balances/Cargo.toml b/pallet-balances/Cargo.toml
-index eb44b3af..bbfbda55 100644
+index eb44b3af..7b0b8a90 100644
 --- a/pallet-balances/Cargo.toml
 +++ b/pallet-balances/Cargo.toml
-@@ -193,3 +193,7 @@ priority = 2
+@@ -193,3 +193,11 @@ priority = 2
  [lints.rust.suspicious_double_ref_op]
  level = "allow"
  priority = 2
 +
 +[dependencies.sp-io]
 +version = '37.0.0'
++default-features = false
++
++[dependencies.either]
++version = "1.8.1"
 +default-features = false
 diff --git a/pallet-indices/Cargo.toml b/pallet-indices/Cargo.toml
 index ed482f98..07011b75 100644
